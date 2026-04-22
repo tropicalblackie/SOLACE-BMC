@@ -335,9 +335,27 @@ export default function BusinessModelCanvas() {
       <style>{`
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         body { margin: 0; padding: 0; }
-        .bmc-grid { display: grid; grid-template-columns: 1fr 1.5fr 1fr; gap: 12px; }
-        @media (max-width: 1400px) { .bmc-grid { grid-template-columns: 1fr 1fr; } }
-        @media (max-width: 768px) { .bmc-grid { grid-template-columns: 1fr; } }
+        .bmc-grid {
+          display: grid;
+          grid-template-columns: repeat(6, 1fr);
+          grid-template-rows: 1fr 1fr auto;
+          gap: 12px;
+          min-height: 660px;
+        }
+        @media (max-width: 1024px) {
+          .bmc-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            grid-template-rows: auto !important;
+            min-height: unset !important;
+          }
+          .bmc-grid > * {
+            grid-column: auto !important;
+            grid-row: auto !important;
+          }
+        }
+        @media (max-width: 640px) {
+          .bmc-grid { grid-template-columns: 1fr !important; }
+        }
       `}</style>
 
       <StarfieldCanvas />
@@ -357,58 +375,57 @@ export default function BusinessModelCanvas() {
 
       {/* Canvas */}
       <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-8 pb-16">
-        {/* Top row */}
-        <div className="bmc-grid mb-4">
-          <BMCCell
-            title={BMC.partnerships.title}
-            items={BMC.partnerships.items}
-            color={BMC.partnerships.color}
-            sectionKey={BMC.partnerships.key}
-            onDetailClick={setSelectedDetail}
-            hoveredSection={hoveredSection}
-          />
-          <BMCCell
-            title={BMC.activities.title}
-            items={BMC.activities.items}
-            color={BMC.activities.color}
-            sectionKey={BMC.activities.key}
-            onDetailClick={setSelectedDetail}
-            hoveredSection={hoveredSection}
-          />
-          <BMCCell
-            title={BMC.resources.title}
-            items={BMC.resources.items}
-            color={BMC.resources.color}
-            sectionKey={BMC.resources.key}
-            onDetailClick={setSelectedDetail}
-            hoveredSection={hoveredSection}
-          />
-        </div>
-
-        {/* Middle row */}
-        <div className="grid grid-cols-5 gap-3 mb-4" style={{ minHeight: "300px" }}>
-          <div className="col-span-1">
+        {/* Unified BMC Grid — 6 equal columns, 3 rows */}
+        <div className="bmc-grid mb-3">
+          {/* Key Partners — col 1, rows 1-2 */}
+          <div style={{ gridColumn: "1", gridRow: "1 / 3" }}>
             <BMCCell
-              title={BMC.relationships.title}
-              items={BMC.relationships.items}
-              color={BMC.relationships.color}
-              sectionKey={BMC.relationships.key}
+              title={BMC.partnerships.title}
+              items={BMC.partnerships.items}
+              color={BMC.partnerships.color}
+              sectionKey={BMC.partnerships.key}
               onDetailClick={setSelectedDetail}
               hoveredSection={hoveredSection}
             />
           </div>
 
-          {/* Value Proposition - Centro grande */}
+          {/* Key Activities — col 2, row 1 */}
+          <div style={{ gridColumn: "2", gridRow: "1" }}>
+            <BMCCell
+              title={BMC.activities.title}
+              items={BMC.activities.items}
+              color={BMC.activities.color}
+              sectionKey={BMC.activities.key}
+              onDetailClick={setSelectedDetail}
+              hoveredSection={hoveredSection}
+            />
+          </div>
+
+          {/* Key Resources — col 2, row 2 */}
+          <div style={{ gridColumn: "2", gridRow: "2" }}>
+            <BMCCell
+              title={BMC.resources.title}
+              items={BMC.resources.items}
+              color={BMC.resources.color}
+              sectionKey={BMC.resources.key}
+              onDetailClick={setSelectedDetail}
+              hoveredSection={hoveredSection}
+            />
+          </div>
+
+          {/* Value Proposition — cols 3-4, rows 1-2 */}
           <div
-            className="col-span-3 rounded-xl p-6 border-3 backdrop-blur-sm relative flex flex-col justify-center items-center text-center cursor-pointer transition-all group"
+            className="rounded-xl p-6 border-2 backdrop-blur-sm relative flex flex-col justify-center items-center text-center cursor-pointer transition-all group"
             style={{
+              gridColumn: "3 / 5",
+              gridRow: "1 / 3",
               borderColor: BMC.value.color + "40",
               background: `linear-gradient(135deg, ${BMC.value.color}10 0%, ${BMC.value.color}02 100%)`,
               boxShadow: `0 0 20px ${BMC.value.color}15`,
             }}
             onClick={() => setSelectedDetail(BMC.value)}
           >
-            <h2 className="text-lg font-semibold uppercase tracking-wider text-white mb-5" style={{ color: BMC.value.color }}>
+            <h2 className="text-lg font-semibold uppercase tracking-wider mb-5" style={{ color: BMC.value.color }}>
               {BMC.value.title}
             </h2>
             <div className="space-y-3 max-w-md">
@@ -423,7 +440,32 @@ export default function BusinessModelCanvas() {
             </div>
           </div>
 
-          <div className="col-span-1">
+          {/* Customer Relationships — col 5, row 1 */}
+          <div style={{ gridColumn: "5", gridRow: "1" }}>
+            <BMCCell
+              title={BMC.relationships.title}
+              items={BMC.relationships.items}
+              color={BMC.relationships.color}
+              sectionKey={BMC.relationships.key}
+              onDetailClick={setSelectedDetail}
+              hoveredSection={hoveredSection}
+            />
+          </div>
+
+          {/* Channels — col 5, row 2 */}
+          <div style={{ gridColumn: "5", gridRow: "2" }}>
+            <BMCCell
+              title={BMC.channels.title}
+              items={BMC.channels.items}
+              color={BMC.channels.color}
+              sectionKey={BMC.channels.key}
+              onDetailClick={setSelectedDetail}
+              hoveredSection={hoveredSection}
+            />
+          </div>
+
+          {/* Customer Segments — col 6, rows 1-2 */}
+          <div style={{ gridColumn: "6", gridRow: "1 / 3" }}>
             <BMCCell
               title={BMC.segments.title}
               items={BMC.segments.items}
@@ -433,38 +475,34 @@ export default function BusinessModelCanvas() {
               hoveredSection={hoveredSection}
             />
           </div>
-        </div>
 
-        {/* Bottom row */}
-        <div className="bmc-grid">
-          <BMCCell
-            title={BMC.channels.title}
-            items={BMC.channels.items}
-            color={BMC.channels.color}
-            sectionKey={BMC.channels.key}
-            onDetailClick={setSelectedDetail}
-            hoveredSection={hoveredSection}
-          />
-          <BMCCell
-            title={BMC.costs.title}
-            items={BMC.costs.items}
-            color={BMC.costs.color}
-            sectionKey={BMC.costs.key}
-            onDetailClick={setSelectedDetail}
-            hoveredSection={hoveredSection}
-          />
-          <BMCCell
-            title={BMC.revenue.title}
-            items={BMC.revenue.items}
-            color={BMC.revenue.color}
-            sectionKey={BMC.revenue.key}
-            onDetailClick={setSelectedDetail}
-            hoveredSection={hoveredSection}
-          />
+          {/* Cost Structure — cols 1-3, row 3 */}
+          <div style={{ gridColumn: "1 / 4", gridRow: "3" }}>
+            <BMCCell
+              title={BMC.costs.title}
+              items={BMC.costs.items}
+              color={BMC.costs.color}
+              sectionKey={BMC.costs.key}
+              onDetailClick={setSelectedDetail}
+              hoveredSection={hoveredSection}
+            />
+          </div>
+
+          {/* Revenue Streams — cols 4-6, row 3 */}
+          <div style={{ gridColumn: "4 / 7", gridRow: "3" }}>
+            <BMCCell
+              title={BMC.revenue.title}
+              items={BMC.revenue.items}
+              color={BMC.revenue.color}
+              sectionKey={BMC.revenue.key}
+              onDetailClick={setSelectedDetail}
+              hoveredSection={hoveredSection}
+            />
+          </div>
         </div>
 
         {/* Impact */}
-        <div className="mt-8 border-2 border-cyan-400/[0.3] rounded-xl p-6 bg-cyan-400/[0.02] backdrop-blur-sm cursor-pointer transition-all hover:border-cyan-400/[0.5] hover:bg-cyan-400/[0.04]">
+        <div className="mt-3 border-2 border-cyan-400/[0.3] rounded-xl p-6 bg-cyan-400/[0.02] backdrop-blur-sm cursor-pointer transition-all hover:border-cyan-400/[0.5] hover:bg-cyan-400/[0.04]">
           <h3 className="text-sm font-semibold uppercase tracking-wider text-cyan-300 mb-3">🚀 Impatto Sociale</h3>
           <p className="text-sm text-slate-300 font-light leading-relaxed">
             Le tecnologie sviluppate per ambienti estremi spaziali convertiranno la diagnostica preventiva di ansia,
